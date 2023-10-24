@@ -1,29 +1,22 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
+import * as packageJson from './package.json';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), dts({ include: ['src/lib/'] })],
   build: {
+    outDir: 'dist/lib',
     lib: {
       // Could also be a dictionary or array of multiple entry points
-      entry: resolve('src', 'lib/main.js'),
-      name: 'MyLib',
-      // the proper extensions will be added
-      fileName: 'my-lib',
+      entry: resolve('src', 'lib/index.ts'),
+      name: '@ninja/bit-melody',
+      formats: ['es', 'umd'],
+      fileName: (format) => `bit-melody.${format}.js`,
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: ['react'],
-      output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          react: 'React',
-        },
-      },
+      external: [...Object.keys(packageJson.peerDependencies)],
     },
   },
 });

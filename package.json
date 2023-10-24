@@ -1,16 +1,37 @@
 {
-  "name": "bit-melody",
+  "name": "@ninja/bit-melody",
   "version": "0.0.0",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build-app": "vite build -c vite-app.config.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint:fix": "eslint --fix . --ext ts,tsx",
+    "format": "prettier --write src//**/*.{ts,tsx,css} --config ./.prettierrc",
+    "preview": "vite preview",
+    "lint-staged": "lint-staged"
   },
-  "dependencies": {
+  "files": [
+    "dist/lib"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/lib/bit-melody.es.js",
+      "require": "./dist/lib/bit-melody.umd.js"
+    },
+    "./dist/lib/style.css": "./dist/lib/style.css"
+  },
+  "main": "./dist/lib/bit-melody.umd.js",
+  "module": "./dist/lib/bit-melody.es.js",
+  "types": "./dist/lib/index.d.ts",
+  "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "tone": "^14.7.77"
   },
   "devDependencies": {
     "@types/node": "20.8.8",
@@ -22,8 +43,23 @@
     "eslint": "8.45.0",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.3",
+    "husky": "8.0.3",
+    "lint-staged": "15.0.2",
     "prettier": "3.0.3",
+    "sass": "1.69.4",
     "typescript": "5.0.2",
-    "vite": "4.4.5"
+    "vite": "4.4.5",
+    "vite-plugin-dts": "3.6.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "npm run lint",
+      "npm run format"
+    ]
   }
 }
