@@ -14,7 +14,7 @@ npm install @ninja-bit/melody
 
 ```typescript jsx
 import { BitMelody } from '@ninja-bit/melody';
-import 'bit-melody/dist/lib/style.css';
+import '@ninja-bit/melody/style.css';
 
 const Container = () => <BitMelody />
 ```
