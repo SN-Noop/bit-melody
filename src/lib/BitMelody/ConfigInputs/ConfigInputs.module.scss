@@ -1,0 +1,13 @@
+.configLabel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 4rem;
+  align-items: center;
+  min-height: 2rem;
+}
+
+.clef {
+  display: inline-block;
+  transform: scale(2);
+  margin-right: 0.5rem;
+}

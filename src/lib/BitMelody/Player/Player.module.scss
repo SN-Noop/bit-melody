@@ -1,0 +1,231 @@
+:root {
+  --half-beat: 24px;
+}
+
+.playerContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.scroller {
+  position: absolute;
+  inset: 0;
+  padding-top: calc(5rem + var(--half-beat));
+  overflow: auto;
+
+  &.isPlaying {
+    overflow: hidden;
+  }
+}
+
+.notesGrid {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  min-height: calc(var(--half-beat) * 32);
+  margin: 0 auto;
+  border-right: 1px solid black;
+  background-image: linear-gradient(to right, black 1px, transparent 1px),
+    linear-gradient(
+      transparent var(--half-beat),
+      grey var(--half-beat),
+      transparent calc(var(--half-beat) + 1px)
+    ),
+    linear-gradient(to bottom, black 1px, transparent 1px);
+  cursor: pointer;
+
+  .measure {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      transparent calc(var(--half-beat) * 8 - 1px),
+      black calc(var(--half-beat) * 8 - 1px),
+      black calc(var(--half-beat) * 8 + 1px),
+      transparent calc(var(--half-beat) * 8 + 1px)
+    );
+    background-size: 100% calc(var(--half-beat) * 8);
+  }
+
+  .note,
+  .shadowNote {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border-radius: 100%;
+    height: 0.75rem;
+    width: 0.75rem;
+    background-color: black;
+    pointer-events: none;
+  }
+
+  .trebleClef,
+  .bassClef {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to right, green 3px, transparent 3px);
+    background-size: 20%;
+
+    &.withAccidentals {
+      background-image: linear-gradient(to right, green 3px, transparent 3px),
+        linear-gradient(
+          to right,
+          transparent calc(300% / 14),
+          green calc(300% / 14),
+          green calc(300% / 14 + 3px),
+          transparent calc(300% / 14 + 3px)
+        ),
+        linear-gradient(
+          to right,
+          transparent calc(700% / 14),
+          green calc(700% / 14),
+          green calc(700% / 14 + 3px),
+          transparent calc(700% / 14 + 3px)
+        ),
+        linear-gradient(
+          to right,
+          transparent calc(1000% / 14),
+          green calc(1000% / 14),
+          green calc(1000% / 14 + 3px),
+          transparent calc(1000% / 14 + 3px)
+        ),
+        linear-gradient(
+          to right,
+          transparent calc(1300% / 14),
+          green calc(1300% / 14),
+          green calc(1300% / 14 + 3px),
+          transparent calc(1300% / 14 + 3px)
+        );
+      background-size: 100%;
+    }
+  }
+
+  .bassClef {
+    background-image: linear-gradient(to right, red 3px, transparent 3px);
+
+    &.withAccidentals {
+      background-image: linear-gradient(to right, red 3px, transparent 3px),
+        linear-gradient(
+          to right,
+          transparent calc(400% / 15),
+          red calc(400% / 15),
+          red calc(400% / 15 + 3px),
+          transparent calc(400% / 15 + 3px)
+        ),
+        linear-gradient(
+          to right,
+          transparent calc(700% / 15),
+          red calc(700% / 15),
+          red calc(700% / 15 + 3px),
+          transparent calc(700% / 15 + 3px)
+        ),
+        linear-gradient(
+          to right,
+          transparent calc(1000% / 15),
+          red calc(1000% / 15),
+          red calc(1000% / 15 + 3px),
+          transparent calc(1000% / 15 + 3px)
+        ),
+        linear-gradient(
+          to right,
+          transparent calc(1400% / 15),
+          red calc(1400% / 15),
+          red calc(1400% / 15 + 3px),
+          transparent calc(1300% / 15 + 3px)
+        );
+      background-size: 100%;
+    }
+  }
+
+  .shadowLine,
+  .shadowColumn {
+    position: absolute;
+    background-color: rgb(0 0 255 / 40%);
+  }
+
+  .shadowLine {
+    height: 3px;
+    width: 100%;
+    transform: translateY(-1px);
+  }
+
+  .shadowColumn {
+    height: 100%;
+    width: 3px;
+    transform: translateX(-1px);
+  }
+
+  .shadowNote {
+    height: 1rem;
+    width: 1rem;
+    background-color: blue;
+    opacity: 0.3;
+  }
+}
+
+.overScroll {
+  height: calc(100% + var(--half-beat));
+}
+
+.noteLabels {
+  position: absolute;
+  inset: 0 -1px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 4rem;
+  margin: 0 auto;
+  background: white;
+
+  &.smallText {
+    font-size: 0.75rem;
+  }
+
+  .noteLabel {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 0;
+  }
+
+  .withAccidentals:after {
+    content: '#';
+    position: absolute;
+    left: 0.25rem;
+    bottom: 60%;
+    font-size: 0.5em;
+  }
+
+  .activeNoteLabel {
+    color: blue;
+    font-weight: bold;
+    transform: scale(1.5);
+  }
+}
+
+.title {
+  position: absolute;
+  inset: 0 2rem auto;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid lightgrey;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+.playLine {
+  position: absolute;
+  inset: 5rem 0 auto;
+  width: 100%;
+  height: 1px;
+  background-color: orange;
+}
