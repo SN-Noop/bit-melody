@@ -11,7 +11,7 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: resolve('src', 'lib/index.ts'),
-      name: 'bit-melody',
+      name: '@ninja-bit/melody',
       formats: ['es', 'umd'],
       fileName: (format) => `bit-melody.${format}.js`,
     },
