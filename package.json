@@ -1,6 +1,6 @@
 {
   "name": "@ninja-bit/melody",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Simple melody maker for React.",
   "type": "module",
   "license": "MIT",
