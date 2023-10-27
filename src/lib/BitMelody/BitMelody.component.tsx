@@ -1,4 +1,11 @@
-import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import classes from './BitMelody.module.scss';
 import { ConfigInputs } from './ConfigInputs';
 import { Player } from './Player';
@@ -12,11 +19,16 @@ import {
 } from './utils';
 
 interface BitMelodyProps {
+  autoPlay?: boolean;
   base64?: string;
   onMint?: (base64: string) => void;
 }
 
-export const BitMelody: FC<BitMelodyProps> = ({ base64, onMint }) => {
+export const BitMelody: FC<BitMelodyProps> = ({
+  autoPlay = false,
+  base64,
+  onMint,
+}) => {
   const [config, setConfig] = useState<BitMelodyConfig>({
     isPlaying: false,
     octaveCount: 2,
@@ -67,20 +79,29 @@ export const BitMelody: FC<BitMelodyProps> = ({ base64, onMint }) => {
     onMint?.(await bufferToBase64(buffer));
   };
 
-  const handleImport = (data: BitMelodyData, tempo: number) => {
-    const usedNotes = data.flatMap((notes) => notes);
-    const withAccidentals = usedNotes.some((note) => note.includes('#'));
-    const octaveCount = Math.min(
-      ...new Array(5).fill(0).map((_, i) => {
-        const notes = getUsableNotes(i + 1, withAccidentals);
+  const handleImport = useCallback(
+    (data: BitMelodyData, tempo: number) => {
+      const usedNotes = data.flatMap((notes) => notes);
+      const withAccidentals = usedNotes.some((note) => note.includes('#'));
+      const octaveCount = Math.min(
+        ...new Array(5).fill(0).map((_, i) => {
+          const notes = getUsableNotes(i + 1, withAccidentals);
 
-        return usedNotes.every((note) => notes.includes(note)) ? i + 1 : 5;
-      }),
-    );
+          return usedNotes.every((note) => notes.includes(note)) ? i + 1 : 5;
+        }),
+      );
 
-    setConfig((prev) => ({ ...prev, tempo, withAccidentals, octaveCount }));
-    setData(data);
-  };
+      setConfig((prev) => ({
+        ...prev,
+        tempo,
+        withAccidentals,
+        octaveCount,
+        isPlaying: autoPlay,
+      }));
+      setData(data);
+    },
+    [autoPlay],
+  );
 
   const importFromJson = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -131,7 +152,7 @@ export const BitMelody: FC<BitMelodyProps> = ({ base64, onMint }) => {
 
     setTitle(parsedTitle);
     handleImport(data, tempo);
-  }, [base64]);
+  }, [base64, handleImport]);
 
   useEffect(() => {
     if (!error) return;
@@ -150,6 +171,7 @@ export const BitMelody: FC<BitMelodyProps> = ({ base64, onMint }) => {
               isPlaying: !prev.isPlaying,
             }))
           }
+          disabled={!data.length}
         >
           {config.isPlaying ? '⏸' : '⏵'}
         </button>
@@ -187,7 +209,7 @@ export const BitMelody: FC<BitMelodyProps> = ({ base64, onMint }) => {
           target="_blank"
           rel="noreferrer"
         >
-          {!base64 ? 'Github' : 'BitMelody'} - by Noop
+          {!base64 ? 'Github' : 'NinjaBitMelody'}
         </a>
       </div>
       <Player
